@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Dungeon Creators',
+      title: 'Dungeon Creator',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Dungeon Creators', level: 1,),
+      home: const MyHomePage(title: 'Dungeon Creator', level: 1,),
     );
   }
 }
@@ -51,7 +51,7 @@ class MyHomeState extends State<MyHomePage> {
             Spacer(),  // レスポンシブな空白
 
             Text(
-              "Dungeon Creators",
+              "Dungeon Creator",
               style: TextStyle(fontSize: 30),
             ),
 
