@@ -106,13 +106,13 @@ class Player extends Pouch {
 
   // プレイヤーのステータスを更新するメソッド
   void update() {
-    this.status["attack"] = (this.equipments["weapon"]!.name!=""
+    this.status["attack"] = (this.equipments["weapon"]!.name!="None" // 装備なしの時
         ? this.equipments["weapon"]?.status["attack"]
         : 1)!;
-    int? head = this.equipments["head"]!.name!=""
+    int? head = this.equipments["head"]!.name!="None" // 装備なしの時
         ? this.equipments["head"]!.status["defence"]
         : 0;
-    int? body = this.equipments["body"]!.name!=""
+    int? body = this.equipments["body"]!.name!="None" // 装備なしの時
       ? this.equipments["body"]!.status["defence"]
       : 0;
     this.status["defence"] = (head! + body!);

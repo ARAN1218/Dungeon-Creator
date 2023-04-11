@@ -57,6 +57,17 @@ class MyHomeState extends State<MyHomePage> {
 
             Spacer(),  // レスポンシブな空白
 
+            Container(
+              width: size.width * (2/3),
+              height: size.width * (2/3),
+              child: Image.asset(
+                'assets/images/title.png',
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            Spacer(),  // レスポンシブな空白
+
             TextButton(
               child: Text(
                 "初級ダンジョン",
@@ -288,6 +299,16 @@ class DungeonState extends State<MyDungeonPage> {
     }
   }
 
+  String _changeCellColor_string(int i, int j) {
+    if(dungeon.dungeon[i][j] == -1 && dungeon.content[i][j].content == GOAL) { // GOAL
+      return "GOAL";
+    } else if (dungeon.dungeon[i][j] == -1) { // 探索済み
+      return dungeon.content[i][j].content.name;
+    } else {
+      return dungeon.dungeon[i][j].toString();
+    }
+  }
+
   void _search(int i, int j, int target) {
     _audio.play('search.mp3');
     _TurnText++;
@@ -426,7 +447,7 @@ class DungeonState extends State<MyDungeonPage> {
                   (i) => TableRow(
                     children: List<Widget>.generate(
                       5,
-                      (widgetIndex) => dungeon.player.pouch[i][widgetIndex].name!="" // アイテム無しの場合
+                      (widgetIndex) => dungeon.player.pouch[i][widgetIndex].name!="None" // アイテム無しの場合
                           ? buildDraggable(i, widgetIndex)
                           : buildDragTarget(i, widgetIndex)
                     )
@@ -522,12 +543,12 @@ class DungeonState extends State<MyDungeonPage> {
                   '武器',
                   style: TextStyle(fontSize: 18),
                 ),
-                dungeon.player.equipments["weapon"]?.name!="" // アイテム無しの場合
+                dungeon.player.equipments["weapon"]?.name!="None" // アイテム無しの場合
                     ? equipmentPouch("weapon")
                     : noequipmentPouch("weapon"),
                 Spacer(),  // レスポンシブな空白
               ],
-          ),
+          ), // 武器
           Spacer(),  // レスポンシブな空白
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -537,12 +558,12 @@ class DungeonState extends State<MyDungeonPage> {
                 '頭',
                 style: TextStyle(fontSize: 18),
               ),
-              dungeon.player.equipments["head"]?.name!="" // アイテム無しの場合
+              dungeon.player.equipments["head"]?.name!="None" // アイテム無しの場合
                   ? equipmentPouch("head")
                   : noequipmentPouch("head"),
               Spacer(),  // レスポンシブな空白
             ],
-          ),
+          ), // 頭
           Spacer(),  // レスポンシブな空白
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -552,12 +573,12 @@ class DungeonState extends State<MyDungeonPage> {
                 '体',
                 style: TextStyle(fontSize: 18),
               ),
-              dungeon.player.equipments["body"]?.name!="" // アイテム無しの場合
+              dungeon.player.equipments["body"]?.name!="None" // アイテム無しの場合
                   ? equipmentPouch("body")
                   : noequipmentPouch("body"),
               Spacer(),  // レスポンシブな空白
             ],
-          ),
+          ), // 体
           Spacer(),  // レスポンシブな空白
         ]
       )
@@ -566,16 +587,25 @@ class DungeonState extends State<MyDungeonPage> {
   // 装備のマス目(ダブルタップで装備、タップで装備解除)
   DragTarget equipmentPouch(String type) => new DragTarget(
     builder: (context, candidateData, rejectedData) {
+      var item_name = dungeon.player.equipments[type]!.name;
     return new GestureDetector(
-        child: Container(
-          child: Text(
-            dungeon.player.equipments[type]!.show(),
-            style: TextStyle(fontSize: 15),
-          ),
-          height: MediaQuery.of(context).size.width/7,
-          width: MediaQuery.of(context).size.width/7,
-          color: Colors.grey,
-          alignment: Alignment.center,
+        child: Stack(
+          children: [
+            Container(
+              child: Image.asset(
+                'assets/images/$item_name.png',
+                fit: BoxFit.contain,
+              ),
+              height: MediaQuery.of(context).size.width/7,
+              width: MediaQuery.of(context).size.width/7,
+              color: Colors.grey,
+              alignment: Alignment.center,
+            ),
+            Text(
+              dungeon.player.equipments[type]!.show(),
+              style: TextStyle(fontSize: 15),
+            ),
+          ],
         ),
         onTap: () {
           _audio.play('equip.mp3');
@@ -613,18 +643,43 @@ class DungeonState extends State<MyDungeonPage> {
   // ダンジョンのマス目
   DragTarget field(int i, int j) => DragTarget(
     builder: (context, candidateData, rejectedData) {
+      var item_name = _changeCellColor_string(i, j);
       return new GestureDetector(
-        child: Container(
-          child: Text(
-            dungeon.dungeon[i][j] != -1
-                ? ""
-                : dungeon.content[i][j].show(),
-            style: TextStyle(fontSize: 12),
-          ),
-          color: _changeCellColor(i, j),
-          height: MediaQuery.of(context).size.width/10,
-          // width: MediaQuery.of(context).size.width/20
+        child: Stack(
+          children: [
+            Container(
+              child: Image.asset(
+                'assets/images/$item_name.png',
+                fit: BoxFit.contain,
+              ),
+              height: MediaQuery.of(context).size.width/10,
+            ),
+            Text(
+              dungeon.dungeon[i][j] != -1
+                  ? ""
+                  : dungeon.content[i][j].show(),
+              style: TextStyle(fontSize: 10),
+            ),
+          ],
         ),
+        //   Container(
+        //   decoration: BoxDecoration(
+        //     image: DecorationImage(
+        //       // Image.asset('assets/images/hato.PNG'),
+        //       image: AssetImage('assets/images/hato.PNG'),
+        //     ),
+        //     color: _changeCellColor(i, j),
+        //   ),
+        //   child: Text(
+        //     dungeon.dungeon[i][j] != -1
+        //         ? ""
+        //         : dungeon.content[i][j].show(),
+        //     style: TextStyle(fontSize: 12),
+        //   ),
+        //   // color: _changeCellColor(i, j),
+        //   height: MediaQuery.of(context).size.width/10,
+        //   // width: MediaQuery.of(context).size.width/20
+        // ),
         // タップされた時、2次元配列の対応するindexにbool値を反転させる
           onTap: () {
             setState(() {
@@ -670,30 +725,55 @@ class DungeonState extends State<MyDungeonPage> {
   // アイテムが入っているマスのポーチ
   DragTarget buildDraggable(int i, int j) => new DragTarget(
     builder: (context, candidateData, rejectedData) {
+      var item_name = dungeon.player.pouch[i][j].name;
       return new GestureDetector(
           child: new Draggable(
             data: [i, j], //dungeon.player.pouch[i][j],
-            child: Container(
-              child: Text(
-                dungeon.player.pouch[i][j].show(),
-                style: TextStyle(fontSize: 15),
-              ),
-              height: 64,
-              width: 128,
-              color: Colors.grey,
-              alignment: Alignment.center,
+            child: Stack(
+              children: [
+                Container(
+                  child: Image.asset(
+                    'assets/images/$item_name.png',
+                    fit: BoxFit.contain,
+                  ),
+                  height: 64,
+                  width: 128,//MediaQuery.of(context).size.width / 5,
+                ),
+                Text(
+                  dungeon.player.pouch[i][j].show(),
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
             ),
           feedback: Material( //ドラッグ中に表示するWidgetを設定
-            child: Container(
-              child: Text(
-                dungeon.player.pouch[i][j].show(),
-                style: TextStyle(fontSize: 15),
-              ),
-              color: Colors.red.withOpacity(0.5),
-              alignment: Alignment.center,
-              width: 64,
-              height: 64,
+            child: Stack(
+              children: [
+                Container(
+                  child: Image.asset(
+                    'assets/images/$item_name.png',
+                    fit: BoxFit.contain,
+                  ),
+                  width: MediaQuery.of(context).size.width / 5,
+                  color: Colors.red.withOpacity(0.5),
+                ),
+                Text(
+                  dungeon.dungeon[i][j] != -1
+                      ? ""
+                      : dungeon.player.pouch[i][j].show(),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
             ),
+            // Container(
+            //   child: Text(
+            //     dungeon.player.pouch[i][j].show(),
+            //     style: TextStyle(fontSize: 15),
+            //   ),
+            //   color: Colors.red.withOpacity(0.5),
+            //   alignment: Alignment.center,
+            //   width: 64,
+            //   height: 64,
+            // ),
           )
       ),
         onTapDown: (details) { // 選択音

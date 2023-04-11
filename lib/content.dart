@@ -17,19 +17,19 @@ final List<int> ITEM_ID_LIST = [
 ]; // 0は入れない
 
 final Map<int, String> ITEM_ID_TO_NAME_MAP = {
-  0 : "", // アイテム無し
-  100 : "銅の剣",
-  101 : "銀の剣",
-  102 : "金の剣",
-  150 : "銅の兜",
-  151 : "銀の兜",
-  152 : "金の兜",
-  180 : "銅の鎧",
-  181 : "銀の鎧",
-  182 : "金の鎧",
-  200 : "工具",
-  300 : "鳩サブレー",
-  301 : "ずんだ餅"
+  0 : "None", // アイテム無し
+  100 : "bronze_sword",
+  101 : "silver_sword",
+  102 : "gold_sword",
+  150 : "bronze_helmet",
+  151 : "silver_helmet",
+  152 : "gold_helmet",
+  180 : "bronze_armor",
+  181 : "silver_armor",
+  182 : "gold_armor",
+  200 : "tool",
+  300 : "hato_shortbread",
+  301 : "zunda"
 };
 
 final Map<int, Map<String, int>> ITEM_ID_TO_STATUS = {
@@ -62,9 +62,9 @@ final Map<String, int> ITEM_ID_TO_EQUIP = {
 // モンスター系
 final List<int> MONSTER_ID_LIST = [-1,-2,-3];
 final Map<int, String> MONSTER_ID_TO_NAME_MAP = {
-  -1 : "スライム",
-  -2 : "ゾンビ",
-  -3 : "トロール",
+  -1 : "slime",
+  -2 : "zombie",
+  -3 : "trawl",
 };
 final Map<int, Map<String, int>> MONSTER_ID_TO_STATUS = {
   -1 : {"attack" : 5, "HP" : 10, "speed" : 2, "command" : 0},
@@ -103,8 +103,8 @@ class Item {
     var level = this.status["level"];
     var stamina = this.status["stamina"];
     return this.status["type"]==100
-        ? this.name.toString() + "($level:$stamina)"
-        : this.name.toString();
+        ? "\nL:$level\nS:$stamina"
+        : "";
   }
 }
 
@@ -123,7 +123,7 @@ class Monster {
   }
 
   String show() {
-    return this.name.toString() + "(" + this.timer.toString() + ")";
+    return "(" + this.timer.toString() + ")";
   }
 
   // モンスターがダメージを受けるメソッド
