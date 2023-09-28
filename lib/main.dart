@@ -222,8 +222,74 @@ class MyHomeState extends State<MyHomePage> {
               title: Text('ゲーム説明'),
               children: <Widget>[
                 SimpleDialogOption(
+                  child: Image.asset(
+                    'assets/images/explanation.png',
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SimpleDialogOption(
                   child: Text(
-                    "モンスターを退け、パネルをめくり、紫色の階段を見つけてダンジョンの奥に進もう！",
+                    "モンスターを退け、パネルをめくり、階段を見つけてダンジョンの奥に進もう！",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "①ゲームの難易度を表します。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "②Floorの分子が現在の階層、分母が最終階を表す。scoreは現在までのスコアを表す。scoreはパネルをめくったり、モンスターを攻撃したりすると獲得できる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "③ダンジョンメニューボタンを表す。押すとタイトルに戻る選択が選べる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "④ダンジョンのパネルを表す。押すと1ターンを消費してパネルを開くことができ、縦横に隣り合う同色のパネルは同時に開く。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑤パネルを開いた後のダンジョンを表す。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑥モンスターを表す。タップで攻撃できる。左上の括弧内の数値はモンスターの攻撃までのターン数を表しており、0になると攻撃してくる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑦ダンジョン内に落ちているアイテムを表す。ポーチに空きがあれば、タップでポーチに入れることができる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑧階段を表す。タップすると次の階層に行ける。最終階層の場合、ダンジョンクリアとなる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑨ステータスを表す。HPは体力、SPはスタミナ、ATKは攻撃力、DEFは防御力を表す。HPはモンスターからの攻撃等で減少し、0になるとゲームオーバーとなる。SPはターン経過で減少し、0になると次のターンからHPが減少していく。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑩装備欄を表す。今付けている装備が表示されており、タップで外すことができる。新しい装備と交換したい時はポーチ内の装備をダブルタップする。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑪ポーチ内のアイテムを表す。アイテムはドラッグ&ドロップで空きスペースに移動できる。",
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "⑫ポーチの空きスペースを表す。ここにダンジョンで拾ったアイテムを格納することができる。",
                   ),
                 ),
                 SimpleDialogOption(
@@ -964,5 +1030,51 @@ class DungeonState extends State<MyDungeonPage> {
         }
     );
     return res;
+  }
+}
+
+
+// 基本説明のページ
+class MyExplanationPage extends StatefulWidget {
+  const MyExplanationPage({super.key});
+
+  @override
+  State<MyExplanationPage> createState() => MyExplanationState();
+}
+
+class MyExplanationState extends State<MyExplanationPage> {
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+        body: Center(
+            child: Column(
+
+            )
+        )
+    );
+  }
+}
+
+
+// アイテム説明のページ
+class MyItemExplanationPage extends StatefulWidget {
+  const MyItemExplanationPage({super.key});
+
+  @override
+  State<MyItemExplanationPage> createState() => MyItemExplanationState();
+}
+
+class MyItemExplanationState extends State<MyItemExplanationPage> {
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return Scaffold(
+        body: Center(
+            child: Column(
+
+            )
+        )
+    );
   }
 }
