@@ -78,7 +78,7 @@ class MyHomeState extends State<MyHomePage> {
                 // （1） 指定した画面に遷移する
                 Navigator.push(context, MaterialPageRoute(
                   // （2） 実際に表示するページ(ウィジェット)を指定する
-                    builder: (context) => MyDungeonPage(title: '初級', level: 10,)
+                    builder: (context) => MyDungeonPage(title: '初級', level: 5,)
                 ));
               },
             ), // 初級ダンジョン
@@ -90,7 +90,7 @@ class MyHomeState extends State<MyHomePage> {
               onPressed: (){
                 _audio.play('select.mp3');
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => MyDungeonPage(title: '中級', level: 20,)
+                    builder: (context) => MyDungeonPage(title: '中級', level: 10,)
                 ));
               },
             ), // 中級ダンジョン
@@ -102,7 +102,7 @@ class MyHomeState extends State<MyHomePage> {
               onPressed: (){
                 _audio.play('select.mp3');
                 Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => MyDungeonPage(title: '上級', level: 30,)
+                    builder: (context) => MyDungeonPage(title: '上級', level: 20,)
                 ));
               },
             ), // 上級ダンジョン
@@ -211,120 +211,119 @@ class MyHomeState extends State<MyHomePage> {
     );
     return res;
   }
+}
 
-
-  // ゲーム説明モーダル
-  Future<bool?> Tutorial(BuildContext context) async {
-    bool? res = await showDialog<bool>(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-              title: Text('ゲーム説明'),
-              children: <Widget>[
-                SimpleDialogOption(
-                  child: Image.asset(
-                    'assets/images/explanation.png',
-                    fit: BoxFit.contain,
+// ゲーム説明モーダル
+Future<bool?> Tutorial(BuildContext context) async {
+  bool? res = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+            title: Text('ゲーム説明'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: Image.asset(
+                  'assets/images/explanation.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "モンスターを退け、パネルをめくり、階段を見つけてダンジョンの奥に進もう！",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "①ゲームの難易度を表します。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "②Floorの分子が現在の階層、分母が最終階を表す。scoreは現在までのスコアを表す。scoreはパネルをめくったり、モンスターを攻撃したりすると獲得できる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "③ダンジョンメニューボタンを表す。押すとタイトルに戻る選択が選べる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "④ダンジョンのパネルを表す。押すと1ターンを消費してパネルを開くことができ、縦横に隣り合う同色のパネルは同時に開く。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑤パネルを開いた後のダンジョンを表す。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑥モンスターを表す。タップで攻撃できる。左上の括弧内の数値はモンスターの攻撃までのターン数を表しており、0になると攻撃してくる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑦ダンジョン内に落ちているアイテムを表す。ポーチに空きがあれば、タップでポーチに入れることができる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑧階段を表す。タップすると次の階層に行ける。最終階層の場合、ダンジョンクリアとなる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑨ステータスを表す。HPは体力、SPはスタミナ、ATKは攻撃力、DEFは防御力を表す。HPはモンスターからの攻撃等で減少し、0になるとゲームオーバーとなる。SPはターン経過で減少し、0になると次のターンからHPが減少していく。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑩装備欄を表す。今付けている装備が表示されており、タップで外すことができる。新しい装備と交換したい時はポーチ内の装備をダブルタップする。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑪ポーチ内のアイテムを表す。アイテムはドラッグ&ドロップで空きスペースに移動できる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "⑫ポーチの空きスペースを表す。ここにダンジョンで拾ったアイテムを格納することができる。",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "武器の下にある(1:30)のような表記の内、左が武器レベル、右が武器の耐久力を表している！同じ武器はドラッグ&ドロップで合成してレベルを上げて強化でき、耐久力がなくなると壊れてしまうぞ！",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "モンスターの下にある(2)のような数字は、モンスターが攻撃するまでの時間を表している！これが0になるとプレイヤーに攻撃してHPを減らしてくるぞ！その前にモンスターをタップして攻撃し、倒してしまおう！",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "最下層目指して頑張ってね〜",
+                ),
+              ),
+              SimpleDialogOption(
+                child: Text(
+                  "このメニューを閉じる",
+                  style: TextStyle(
+                    color: Colors.red,
                   ),
                 ),
-                SimpleDialogOption(
-                  child: Text(
-                    "モンスターを退け、パネルをめくり、階段を見つけてダンジョンの奥に進もう！",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "①ゲームの難易度を表します。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "②Floorの分子が現在の階層、分母が最終階を表す。scoreは現在までのスコアを表す。scoreはパネルをめくったり、モンスターを攻撃したりすると獲得できる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "③ダンジョンメニューボタンを表す。押すとタイトルに戻る選択が選べる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "④ダンジョンのパネルを表す。押すと1ターンを消費してパネルを開くことができ、縦横に隣り合う同色のパネルは同時に開く。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑤パネルを開いた後のダンジョンを表す。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑥モンスターを表す。タップで攻撃できる。左上の括弧内の数値はモンスターの攻撃までのターン数を表しており、0になると攻撃してくる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑦ダンジョン内に落ちているアイテムを表す。ポーチに空きがあれば、タップでポーチに入れることができる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑧階段を表す。タップすると次の階層に行ける。最終階層の場合、ダンジョンクリアとなる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑨ステータスを表す。HPは体力、SPはスタミナ、ATKは攻撃力、DEFは防御力を表す。HPはモンスターからの攻撃等で減少し、0になるとゲームオーバーとなる。SPはターン経過で減少し、0になると次のターンからHPが減少していく。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑩装備欄を表す。今付けている装備が表示されており、タップで外すことができる。新しい装備と交換したい時はポーチ内の装備をダブルタップする。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑪ポーチ内のアイテムを表す。アイテムはドラッグ&ドロップで空きスペースに移動できる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "⑫ポーチの空きスペースを表す。ここにダンジョンで拾ったアイテムを格納することができる。",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "武器の下にある(1:30)のような表記の内、左が武器レベル、右が武器の耐久力を表している！同じ武器はドラッグ&ドロップで合成してレベルを上げて強化でき、耐久力がなくなると壊れてしまうぞ！",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "モンスターの下にある(2)のような数字は、モンスターが攻撃するまでの時間を表している！これが0になるとプレイヤーに攻撃してHPを減らしてくるぞ！その前にモンスターをタップして攻撃し、倒してしまおう！",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "最下層目指して頑張ってね〜",
-                  ),
-                ),
-                SimpleDialogOption(
-                  child: Text(
-                    "このメニューを閉じる",
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
-                  ),
-                  onPressed: () {
-                    _audio.play('select.mp3');
-                    Navigator.pop(context);
-                  },
-                ),
-              ]
-          );
-        }
-    );
-    return res;
-  }
+                onPressed: () {
+                  _audio.play('select.mp3');
+                  Navigator.pop(context);
+                },
+              ),
+            ]
+        );
+      }
+  );
+  return res;
 }
 
 
@@ -921,14 +920,11 @@ class DungeonState extends State<MyDungeonPage> {
               children: <Widget>[
                 SimpleDialogOption(
                   child: Text(
-                    "タイトルに戻る",
-                    style: TextStyle(
-                      color: Colors.red,
-                    ),
+                    "ゲーム説明",
                   ),
                   onPressed: () {
                     _audio.play('select.mp3');
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Tutorial(context);
                   },
                 ),
                 SimpleDialogOption(
@@ -937,6 +933,19 @@ class DungeonState extends State<MyDungeonPage> {
                     _audio.play('select.mp3');
                     Navigator.pop(context);
                     },
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "タイトルに戻る",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                  onPressed: () {
+                    _audio.play('select.mp3');
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                    dungeon.stopwatch.stop();
+                  },
                 ),
               ]
           );
@@ -949,6 +958,7 @@ class DungeonState extends State<MyDungeonPage> {
   // クリア画面モーダル
   Future<bool?> dungeon_clear(BuildContext context) async {
     int score = dungeon.score;
+    String time = dungeon.stopwatch.elapsed.toString()+'[秒]';
     int floor = widget.level;
     bool? res = await showDialog<bool>(
         context: context,
@@ -972,6 +982,15 @@ class DungeonState extends State<MyDungeonPage> {
                 SimpleDialogOption(
                   child: Text(
                     "あなたのスコア：$score",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.red,
+                    ),
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                    "クリアタイム：$time",
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.red,

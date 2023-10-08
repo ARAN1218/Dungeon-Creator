@@ -12,6 +12,7 @@ class Dungeon extends Content {
   late var content;
   late var player = Player();
   int score = 0;
+  Stopwatch stopwatch = Stopwatch();
   int dungeon_length = 10;
 
   // ダンジョン初期化
@@ -24,6 +25,9 @@ class Dungeon extends Content {
       dungeon_length,
           (i) => List<Content>.generate(dungeon_length, (j) => content_lottery(random.nextInt(100))).toList(),
     ).toList();
+
+    // タイマーを起動
+    stopwatch.start();
 
     // ゴールを作る
     content[random.nextInt(dungeon_length)][random.nextInt(dungeon_length)] = Content("GOAL", GOAL);
@@ -59,6 +63,7 @@ class Dungeon extends Content {
   // ダンジョンをリセットする
   void clearDungeon() {
     this.score = -9999;
+    this.stopwatch.reset();
     for (int i = 0; i < dungeon.length; i++) {
       for (int j = 0; j < dungeon[i].length; j++) {
         dungeon[i][j] = -1;
