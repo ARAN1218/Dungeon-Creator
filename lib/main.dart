@@ -681,9 +681,11 @@ class DungeonState extends State<MyDungeonPage> {
     onAccept: (data) {
       final data_ = data as List;
       if(dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 200
-      && type == "weapon") {
+          && type == "weapon") {
         setState(() {dungeon.player.cure_equipments(type, data);});
-      } else {
+      }
+      if(dungeon.player.pouch[data_[0]][data_[1]].status["type"] == dungeon.player.equipments["weapon"]!.status["type"]
+          && type == "weapon") {
         setState(() {dungeon.player.composite_equipments(type, data);});
       }
     },
@@ -700,8 +702,16 @@ class DungeonState extends State<MyDungeonPage> {
       );
     },
     onAccept: (data) {
+      final data_ = data as List;
+      if((dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 100
+          && type == "weapon")
+      || (dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 110
+              && type == "head")
+      || (dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 111
+              && type == "body")) {
       _audio.play('equip.mp3');
       setState(() {dungeon.player.equip_equipments(type, data);});
+      }
     },
   );
 
@@ -972,29 +982,17 @@ class DungeonState extends State<MyDungeonPage> {
               children: <Widget>[
                 SimpleDialogOption(
                   child: Text(
-                    "到達階数：$floor",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red,
-                    ),
+                    "到達階数：$floor"
                   ),
                 ),
                 SimpleDialogOption(
                   child: Text(
-                    "あなたのスコア：$score",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red,
-                    ),
+                    "あなたのスコア：$score"
                   ),
                 ),
                 SimpleDialogOption(
                   child: Text(
-                    "クリアタイム：$time",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.red,
-                    ),
+                    "クリアタイム：$time"
                   ),
                 ),
                 SimpleDialogOption(
@@ -1008,6 +1006,10 @@ class DungeonState extends State<MyDungeonPage> {
                 SimpleDialogOption(
                   child: Text(
                     "タイトルに戻る",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.red,
+                    ),
                   ),
                   onPressed: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
@@ -1023,6 +1025,8 @@ class DungeonState extends State<MyDungeonPage> {
 
   // ゲームオーバー画面モーダル
   Future<bool?> dungeon_gameover(BuildContext context) async {
+    int score = dungeon.score;
+    String time = dungeon.stopwatch.elapsed.toString()+'[秒]';
     bool? res = await showDialog<bool>(
         context: context,
         barrierDismissible: false,
@@ -1033,6 +1037,21 @@ class DungeonState extends State<MyDungeonPage> {
                 style: TextStyle(fontSize: 30),
               ),
               children: <Widget>[
+                SimpleDialogOption(
+                  child: Text(
+                      "到達階数：$_FloorText"
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                      "あなたのスコア：$score"
+                  ),
+                ),
+                SimpleDialogOption(
+                  child: Text(
+                      "プレイタイム：$time"
+                  ),
+                ),
                 SimpleDialogOption(
                   child: Text(
                     "タイトルに戻る",

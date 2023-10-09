@@ -169,7 +169,7 @@ class Player extends Pouch {
       this.equipments["weapon"]!.status["attack"] = (this.equipments["weapon"]!.status["attack"]! + 1);
       this.equipments["weapon"]!.status["stamina"] = min(
           ITEM_ID_TO_STATUS[this.equipments["weapon"]!.status["type"]!]!["stamina"]!,
-        (this.equipments["weapon"]!.status["stamina"]! + tmp[rIndex[0]][rIndex[1]].status["stamina"]!) ~/ 2
+        (this.equipments["weapon"]!.status["stamina"]! + tmp[rIndex[0]][rIndex[1]].status["stamina"]!) ~/ 2 + 1
       );
       tmp[rIndex[0]][rIndex[1]] = Item(0);
       this.pouch = tmp;
