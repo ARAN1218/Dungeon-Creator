@@ -14,6 +14,7 @@ class Dungeon extends Content {
   int score = 0;
   Stopwatch stopwatch = Stopwatch();
   int dungeon_length = 10;
+  // List<int> monsters_list;
 
   // ダンジョン初期化
   Dungeon() : super('', 0) {
@@ -31,6 +32,9 @@ class Dungeon extends Content {
 
     // ゴールを作る
     content[random.nextInt(dungeon_length)][random.nextInt(dungeon_length)] = Content("GOAL", GOAL);
+
+    // モンスターリストを定義
+    // List<int> MONSTER_ID_LIST = monsters_list;
   }
 
   // dungeonの抽選に使う関数
@@ -120,7 +124,7 @@ class Dungeon extends Content {
     }
   }
 
-  // モンスターの行動タイマーを進めるメソッド
+  // ゲームの行動タイマーを進めるメソッド
   void timer_update() {
     // プレイヤーのSPを消費する
     // SPが0の場合、HPが削られる
@@ -128,9 +132,23 @@ class Dungeon extends Content {
       _audio.play('hungry.mp3');
     }
     if(this.player.status["SP"]! > 0) {
-      this.player.status["SP"] = (this.player.status["SP"]!-1);
+      this.player.status["SP"] = (this.player.status["SP"]! - this.player.status["stamina"]!);
     } else {
-      this.player.status["HP"] = (this.player.status["HP"]!-1);
+      this.player.status["HP"] = (this.player.status["HP"]! - this.player.status["stamina"]!);
+    }
+
+    // プレイヤーの継続ダメージを処理する
+    this.player.status["HP"] = (this.player.status["HP"]!-this.player.status["con_damage"]!);
+
+    // プレイヤーの状態異常を消費する
+    // プレイヤーの状態異常が0の場合、状態異常を失う
+    for(int i=0; i<this.player.conditions.length; i++) {
+      if(this.player.conditions[i]!["name"] != "None") {
+        this.player.conditions[i]!["time"] -= 1;
+        if(this.player.conditions[i]!["time"] == 0) {
+          this.player.sub_conditions(i);
+        }
+      }
     }
 
     for (int i = 0; i < dungeon.length; i++) {
