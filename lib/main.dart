@@ -539,6 +539,7 @@ class DungeonState extends State<MyDungeonPage> {
           mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Spacer(),  // レスポンシブな空白
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
@@ -548,52 +549,87 @@ class DungeonState extends State<MyDungeonPage> {
                   ),
                 ],
               ), // STATUS
+
+              Spacer(),  // レスポンシブな空白
+
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'HP: $HP',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: dungeon.player.status["HP"]! < 20
-                        ? Colors.red
-                        : Colors.black,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    conditions(0),
+                    conditions(1),
+                    conditions(2),
+                    conditions(3),
+                    conditions(4),
+                  ]
+              ), // 状態異常マス(5マス程度置くかも)
+
+              Spacer(),  // レスポンシブな空白
+
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'HP: $HP',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: dungeon.player.status["HP"]! < 20
+                                      ? Colors.red
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ), // HPの表示
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'SP: $SP',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: dungeon.player.status["SP"]! < 20
+                                      ? Colors.red
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
+                          ), // SPの表示
+                        ]
                     ),
-                  ),
-                ],
-              ), // HPの表示
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'SP: $SP',
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: dungeon.player.status["SP"]! < 20
-                          ? Colors.red
-                          : Colors.black,
+
+                    const SizedBox(width: 5),
+
+                    Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'ATK: $atk',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ), // ATKの表示
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'DEF: $def',
+                                style: TextStyle(fontSize: 15),
+                              ),
+                            ],
+                          ), // DEFの表示
+                        ]
                     ),
-                  ),
-                ],
-              ), // ATKの表示
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'ATK: $atk',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
-              ), // ATKの表示
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'DEF: $def',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                ],
-              ), // DEFの表示
+                  ]
+              ), // パラメータ
+
               Spacer(),  // レスポンシブな空白
             ],
           ),
@@ -649,6 +685,33 @@ class DungeonState extends State<MyDungeonPage> {
       )
     );
 
+  // 状態異常マス
+  DragTarget conditions(int con) => new DragTarget(
+    builder: (context, candidateData, rejectedData) {
+      var item_name = dungeon.player.conditions[con]!["name"];
+      return new GestureDetector(
+        child: Stack(
+          children: [
+            Container(
+              child: Image.asset(
+                'assets/images/$item_name.png',
+                fit: BoxFit.contain,
+              ),
+              height: MediaQuery.of(context).size.width/20,
+              width: MediaQuery.of(context).size.width/20,
+              color: Colors.grey,
+              alignment: Alignment.center,
+            ),
+          ],
+        ),
+        // onTap: () {
+        //   _audio.play('equip.mp3');
+        //   setState(() {dungeon.player.exit_equipments(type);});
+        // },
+      );
+    }
+  );
+
   // 装備のマス目(ダブルタップで装備、タップで装備解除)
   DragTarget equipmentPouch(String type) => new DragTarget(
     builder: (context, candidateData, rejectedData) {
@@ -688,6 +751,17 @@ class DungeonState extends State<MyDungeonPage> {
           && type == "weapon") {
         setState(() {dungeon.player.composite_equipments(type, data);});
       }
+
+      // 装備入れ替え
+      if((dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 100
+          && type == "weapon")
+          || (dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 110
+              && type == "head")
+          || (dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 111
+              && type == "body")) {
+        _audio.play('equip.mp3');
+        setState(() {dungeon.player.equip_equipments(type, data);});
+      }
     },
   );
 
@@ -709,8 +783,8 @@ class DungeonState extends State<MyDungeonPage> {
               && type == "head")
       || (dungeon.player.pouch[data_[0]][data_[1]].status["type"] == 111
               && type == "body")) {
-      _audio.play('equip.mp3');
-      setState(() {dungeon.player.equip_equipments(type, data);});
+        _audio.play('equip.mp3');
+        setState(() {dungeon.player.equip_equipments(type, data);});
       }
     },
   );
@@ -763,7 +837,7 @@ class DungeonState extends State<MyDungeonPage> {
               } else
               if (dungeon.content[i][j].type == "monster") { // モンスターにタップした時
                 _audio.play('attack.mp3');
-                dungeon.content[i][j].content.damage(dungeon, [i, j], dungeon.player.status["attack"]);
+                dungeon.content[i][j].content.damage(dungeon, [i, j], dungeon.player.status["attack"]!+random.nextInt(dungeon.player.status["variance"]!)*[1,-1][random.nextInt(2)]);
                 _timer_update();
               } else if (dungeon.content[i][j].content is Item && dungeon.content[i][j].content.status["type"] != 0) { // フィールドに落ちているアイテムをタップした時
                 _audio.play('drop.mp3');
@@ -867,6 +941,12 @@ class DungeonState extends State<MyDungeonPage> {
             } else if (dungeon.player.pouch[i][j].status["type"] == 300) { // 回復アイテム
               _audio.play('cure.mp3');
               setState(() {dungeon.player.pouch[i][j].cure(dungeon, [i,j]);});
+            } else if (dungeon.player.pouch[i][j].status["type"] == 400) { // 薬
+              _audio.play('cure.mp3');
+              setState(() {dungeon.player.add_conditions([i,j], COMMAND_TO_STATUS[dungeon.player.pouch[i][j].status["command"]]!);});
+            } else if (dungeon.player.pouch[i][j].status["type"] == 777) { // ラッキールーレット
+              _audio.play('lucky.mp3');
+              setState(() {dungeon.player.lucky_roulette([i,j]);});
             }
         },
       );

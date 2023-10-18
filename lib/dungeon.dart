@@ -133,6 +133,17 @@ class Dungeon extends Content {
       this.player.status["HP"] = (this.player.status["HP"]!-1);
     }
 
+    // プレイヤーの状態異常を消費する
+    // プレイヤーの状態異常が0の場合、状態異常を失う
+    for(int i=0; i<this.player.conditions.length; i++) {
+      if(this.player.conditions[i]!["name"] != "None") {
+        this.player.conditions[i]!["time"] -= 1;
+        if(this.player.conditions[i]!["time"] == 0) {
+          this.player.sub_conditions(i);
+        }
+      }
+    }
+
     for (int i = 0; i < dungeon.length; i++) {
       for (int j = 0; j < dungeon[i].length; j++) {
         if(this.content[i][j].type == "monster") { // モンスターをサーチ
