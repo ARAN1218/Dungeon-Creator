@@ -114,7 +114,7 @@ class Pouch {
 // プレイヤーのステータスを司るクラス
 class Player extends Pouch {
   Map<String,int> status = {
-    "HP" : 10000,
+    "HP" : 100,
     "SP" : 100,
     "attack" : 1,
     "attack_buff" : 0,
